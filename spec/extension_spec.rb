@@ -4,13 +4,13 @@ describe 'VOODOO Extension' do
     browser = VOODOO::Browser.Chrome
     it 'should correctly add a background script' do
         extension = browser.extension
-        extension.add_background_script 'alert(1)'
+        extension.add_background_script content: 'alert(1)'
         expect(extension.manifest[:background][:scripts][0]).to eq('1.js')
     end
 
     it 'should correctly save and delete the extension' do
         extension = browser.extension
-        extension.add_background_script 'alert(1)'
+        extension.add_background_script content: 'alert(1)'
         extension.save
         
         js_file_path = File.join(extension.folder, '1.js')

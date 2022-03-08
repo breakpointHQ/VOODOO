@@ -4,7 +4,7 @@ describe 'VOODOO Browser' do
     matches_example_com = 'https://example.com/*'
     it "should add content script with alert(1) to #{matches_example_com}" do
         browser = VOODOO::Browser.Chrome
-        browser.add_script 'alert(1)', matches: matches_example_com
+        browser.add_script content: 'alert(1)', matches: matches_example_com
         extension = browser.extension
         extension.save
 

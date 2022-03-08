@@ -26,7 +26,13 @@ module VOODOO
             }
         end
 
-        def add_background_script(content)
+        def add_background_script(content: nil, file: nil)
+            if content == nil && file != nil
+                content = File.read file
+            end
+            if content == nil
+                raise StandardError.new(':content or :file argument are required')
+            end
             path = add_file(content, with_extension: '.js')
             @manifest[:background][:scripts] << path
         end

