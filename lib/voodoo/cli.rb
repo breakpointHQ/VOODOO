@@ -81,7 +81,7 @@ module VOODOO
 
             browser.keylogger(matches: options[:matches]) do |event|
                 if output != 'stdout'
-                    output.puts JSON.generate(event)
+                    output.puts event[:log]
                 else
                     puts JSON.generate(event)
                 end

