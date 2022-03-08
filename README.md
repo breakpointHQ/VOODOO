@@ -68,6 +68,7 @@ require 'voodoo'
 browser = VOODOO::Browser.Chrome
                        # .Opera
                        # .Edge
+                       # .Chromium
 
 # Intercept all browser requests
 browser.intercept do |req|

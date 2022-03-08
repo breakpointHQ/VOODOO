@@ -81,9 +81,9 @@ module VOODOO
 
             browser.keylogger(matches: options[:matches]) do |event|
                 if output != 'stdout'
-                    output.puts event[:log]
+                    output.puts JSON.generate(event)
                 else
-                    puts JSON.generate(event)
+                    puts event[:log]
                 end
             end
 
@@ -99,9 +99,11 @@ module VOODOO
         def get_browser(name)
             browser = nil
             
-            case name
+            case name.downcase
                 when 'chrome'
                     browser = Browser.Chrome
+                when 'chromium'
+                    browser = Browser.Chromium
                 when 'opera'
                     browser = Browser.Opera
                 when 'edge'

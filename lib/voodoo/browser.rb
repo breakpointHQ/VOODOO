@@ -82,6 +82,10 @@ module VOODOO
             self.new(bundle: 'com.microsoft.edgemac', process_name: 'Microsoft Edge')
         end
 
+        def Browser.Chromium
+            self.new(bundle: 'org.chromium.Chromium', process_name: 'Chromium')
+        end
+
         private
 
         def make_collector
