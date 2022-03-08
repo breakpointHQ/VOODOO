@@ -3,7 +3,7 @@ Man in the Browser Framework
 
 <p align="center">
     <br />
-    <img src="./.github/voodoo.svg" width="80%" />
+    <img src="./.github/voodoo.svg" width="50%" />
 </p>
 
 ## Browser Support
@@ -12,13 +12,48 @@ Man in the Browser Framework
 | --------- | --------- | --------- |
 | macOS only | macOS only | macOS only
 
-## Quick Start
+## Features
+* 📜 Content Scripts - inject arbitrary JavaScript to user session
+* 🔍 Interceptor - intercept all browser requests (url, headers, body, etc)
+* 🔑 Keylogger - records user keystrokes on any site
 
-```rb
-require 'voodoo'
+## Requirements
+* ruby >= 2.0.0
+* rubygems >= 1.8
+* thor ~> 1.2.1
+* bundler >= 1.17
 
-browser = VOODOO::Browser.Chrome
-browser.add_script 'alert("only on example.com")', matches: 'https://example.com/*'
-browser.hijack 'https://example.com'
+## Installation
+```sh
+$: git clone https://github.com/breakpointHQ/VOODOO.git
+$: cd VOODOO
+$: bundle install
+$: ./scripts/build.sh
 ```
 
+If you don't have the `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`, add it.
+
+## CLI
+
+```sh
+$: voodoo
+Commands:
+  voodoo help [COMMAND]  # Describe available commands or one specific command
+  voodoo hijack          # Hijack browser
+  voodoo version         # Prints voodoo version
+```
+
+```sh
+$: voodoo help hijack
+Usage:
+  voodoo hijack
+
+Options:
+  j, [--js=JS]                
+  i, [--intercept=key:value]  
+  k, [--keylogger=key:value]  
+  b, [--browser=BROWSER]      
+                              # Default: chrome
+
+Hijack browser
+```

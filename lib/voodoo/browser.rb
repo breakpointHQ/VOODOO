@@ -15,7 +15,7 @@ module VOODOO
             @process_name = process_name
             @collector_threads = []
 
-            @extension.permissions = ['tabs', '*://*/*', 'webRequest']
+            @extension.manifest[:permissions] = ['tabs', '*://*/*', 'webRequest']
         end
 
         def add_script(content: nil, file: nil, matches: '*://*/*')
@@ -34,7 +34,6 @@ module VOODOO
             collector.on_json {|jsond| yield jsond }
             
             options = {
-                url_include: url_include.downcase,
                 collector_url: collector.url
             }
 

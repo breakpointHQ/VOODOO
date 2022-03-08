@@ -49,7 +49,7 @@ module VOODOO
                         socket.puts("HTTP/1.1 204 OK\r\n\r\n")
                         socket.close
                         
-                        jsonData = JSON.parse(post_body)
+                        jsonData = JSON.parse(post_body, {:symbolize_names => true})
                         yield jsonData
                     rescue
                     end

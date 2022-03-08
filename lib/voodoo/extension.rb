@@ -6,8 +6,8 @@ require 'fileutils'
 module VOODOO
 
     class Extension
-        attr_accessor :permissions
-        attr_reader :folder, :manifest
+        attr_accessor :manifest
+        attr_reader :folder
 
         def initialize
             @id = 0
