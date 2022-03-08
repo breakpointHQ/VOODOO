@@ -38,22 +38,24 @@ If you don't have the `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`, ad
 ```sh
 $: voodoo
 Commands:
-  voodoo help [COMMAND]  # Describe available commands or one specific command
-  voodoo hijack          # Hijack browser
-  voodoo version         # Prints voodoo version
+  voodoo help [COMMAND]    # Describe available commands or one specific command
+  voodoo intercept         # intercept browser requests
+  voodoo keylogger         # records user keystrokes
+  voodoo script <js/path>  # add a content script
+  voodoo version           # Prints voodoo version
 ```
 
 ```sh
-$: voodoo help hijack
+$: voodoo help script
 Usage:
-  voodoo hijack
+  voodoo script <js/path>
 
 Options:
-  j, [--js=JS]                
-  i, [--intercept=key:value]  
-  k, [--keylogger=key:value]  
-  b, [--browser=BROWSER]      
-                              # Default: chrome
+  s, [--site=SITE]              
+  m, [--matches=one two three]  
+                                # Default: ["*://*/*"]
+  b, [--browser=BROWSER]        
+                                # Default: chrome
 
-Hijack browser
+add a content script
 ```
