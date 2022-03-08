@@ -93,11 +93,11 @@ module VOODOO
         end
 
         def build_js(file, with_options: nil)
-            str = File.read(File.join(__dir__, 'js', file))
+            js = File.read(File.join(__dir__, 'js', file))
             if with_options != nil
-                str = str.gsub('REBY_INJECTED_OPTIONS', JSON.generate(with_options))
+                js = js.gsub('REBY_INJECTED_OPTIONS', JSON.generate(with_options))
             end
-            str
+            return js
         end
     end
 
