@@ -13,8 +13,8 @@ Man in the Browser Framework
 | macOS only | macOS only | macOS only
 
 ## Features
-* 📜 Content Scripts - inject arbitrary JavaScript to user session
-* 🔍 Interceptor - intercept browser requests (url, headers, body, etc)
+* 📜 Content Scripts - inject arbitrary JavaScript to any page
+* 🔍 Interceptor - capture browser traffic (url, headers, body, etc)
 * 🔑 Keylogger - records user keystrokes on any site
 
 ## Requirements
