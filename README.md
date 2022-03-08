@@ -28,7 +28,7 @@ Man in the Browser Framework
 $: git clone https://github.com/breakpointHQ/VOODOO.git
 $: cd VOODOO
 $: bundle install
-$: ./scripts/build.sh
+$: ./scripts/install.sh
 ```
 
 If you don't have the `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`, add it.
