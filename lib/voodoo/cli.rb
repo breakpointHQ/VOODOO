@@ -13,9 +13,9 @@ module VOODOO
             puts VERSION
         end
         
-        option :url_include, :type => :string, :aliases => :ui, :default => nil
-        option :body_include, :type => :string, :aliases => :bi, :default => nil
-        option :header_exists, :type => :string, :aliases => :he, :default => nil
+        option :url_include, :type => :string, :aliases => :u, :default => nil
+        option :body_include, :type => :string, :aliases => :b, :default => nil
+        option :header_exists, :type => :string, :aliases => :h, :default => nil
         option :output, :type => :string, :aliases => :o, :default => 'stdout'
         option :site, :type => :string, :aliases => :s, :default => ''
         option :matches, :type => :array, :aliases => :m, :default => ['<all_urls>']
@@ -83,7 +83,7 @@ module VOODOO
                 if output != 'stdout'
                     output.puts JSON.generate(event)
                 else
-                    puts event[:log]
+                    print event[:log]
                 end
             end
 

@@ -86,7 +86,7 @@ module VOODOO
             self.new(bundle: 'org.chromium.Chromium', process_name: 'Chromium')
         end
 
-        private
+        protected
 
         def make_collector
             collector = Collector.new

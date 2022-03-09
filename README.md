@@ -45,8 +45,9 @@ Commands:
   voodoo version           # Prints voodoo version
 ```
 
+## Adding content script
+
 ```sh
-$: voodoo help script
 Usage:
   voodoo script <js/path>
 
@@ -60,6 +61,84 @@ Options:
 add a content script
 ```
 
+Execute JS on every page loaded on the Opera browser.
+```sh
+$: voodoo script "alert('Hello VOODOO!');" -b opera
+```
+
+Execute JS on every page matches `https://example.com/*`
+```sh
+$: voodoo script "alert('Example VOODOO!');" -b chrome -m "https://example.com/*"
+```
+
+Execute JS on every page loaded on Google Chrome, and open `https://example.com`.
+```js
+$: voodoo script /tmp/myjs.js -b chrome -s "https://example.com"
+```
+
+## Intercept browser traffic
+
+```sh
+Usage:
+  voodoo intercept
+
+Options:
+  u, [--url-include=URL_INCLUDE]      
+  b, [--body-include=BODY_INCLUDE]    
+  h, [--header-exists=HEADER_EXISTS]  
+  o, [--output=OUTPUT]                
+                                      # Default: stdout
+  s, [--site=SITE]                    
+  m, [--matches=one two three]        
+                                      # Default: ["<all_urls>"]
+  b, [--browser=BROWSER]              
+                                      # Default: chrome
+
+intercept browser requests
+```
+
+Intercept all requests
+```sh
+$: voodoo intercept -o /tmp/requests_log.txt
+```
+
+Intercept all requests from Opera browser only when the url include `/login`.
+```sh
+$: voodoo intercept -o /tmp/requests_log.txt --url-include "/login"
+```
+
+Intercept all requests when the post body include `@`.
+```sh
+$: voodoo intercept -o /tmp/requests_log.txt --body-include "@"
+```
+
+Intercept all requests when the url matches `https://example.com/*` or `https://example.net/*`
+```sh
+$: voodoo intercept -m "https://example.com/*" "https://example.net/*"
+```
+
+## Keylogger
+```sh
+Usage:
+  voodoo keylogger
+
+Options:
+  s, [--site=SITE]              
+  o, [--output=OUTPUT]          
+                                # Default: stdout
+  m, [--matches=one two three]  
+                                # Default: ["*://*/*"]
+  b, [--browser=BROWSER]        
+                                # Default: chrome
+
+records user keystrokes
+```
+
+Record user keys only when the url matches `https://example.com/*`
+```sh
+$: voodoo keylogger -m "https://example.com/*"
+```
+
 ## Ruby API
 
 ```rb
@@ -69,6 +148,10 @@ browser = VOODOO::Browser.Chrome
                        # .Opera
                        # .Edge
                        # .Chromium
+
+# Execute JS on example.com
+browser.add_script(content: 'alert("VOODOO Example!");',
+                   matches: 'https://example.com/*')
 
 # Intercept all browser requests
 browser.intercept do |req|
@@ -80,6 +163,7 @@ browser.keylogger do |event|
     print event[:log]
 end
 
+# hijack browser, and open example.com
 browser.hijack 'https://example.com'
 ```
 
