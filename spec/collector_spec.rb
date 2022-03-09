@@ -28,4 +28,19 @@ describe 'VOODOO Collector' do
             ports.add collector.port
         end
     end
+    it 'should correctly collect an event' do
+        collector = VOODOO::Collector.new
+        event = nil
+        collector.on_json {|e| event = e }
+        uri = URI(collector.url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        req = Net::HTTP::Post.new(uri.path + uri.query)
+        req.body = '{"type":"test"}'
+        res = http.request(req)
+        expect(res.code).to eq('204')
+        while event == nil
+            # wait...
+        end
+        expect(event[:type]).to eq('test')
+    end
 end

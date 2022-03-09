@@ -26,8 +26,7 @@ Man in the Browser Framework
 ## Installation
 ```sh
 $: git clone https://github.com/breakpointHQ/VOODOO.git
-$: cd VOODOO
-$: bundle install
+$: cd ./VOODOO
 $: ./scripts/install.sh
 ```
 
