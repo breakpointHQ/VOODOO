@@ -25,9 +25,15 @@ Man in the Browser Framework
 
 ## Installation
 ```sh
+$: gem install get-voodoo
+```
+
+## Build from source
+```sh
 $: git clone https://github.com/breakpointHQ/VOODOO.git
 $: cd ./VOODOO
-$: ./scripts/install.sh
+$: gem build ./voodoo.gemspec
+$: gem install ./get-voodoo-X.X.X.gem
 ```
 
 If you don't have the `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`, add it.

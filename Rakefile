@@ -8,15 +8,20 @@ end
 
 desc 'Uninstall VOODOO'
 task :uninstall do
-  puts `gem uninstall voodoo`
+  puts `gem uninstall get-voodoo`
 end
 
 desc 'Uninstall, re-build, and install'
 task :dev do
-  `gem uninstall voodoo`
+  `gem uninstall get-voodoo`
   puts `bundle install`
   puts `gem build ./voodoo.gemspec`
-  puts `gem install ./VOODOO-0.0.1.gem --user-install && rm ./VOODOO-0.0.1.gem`
+  puts `gem install ./get-voodoo-0.0.3.gem --user-install && rm ./get-voodoo-0.0.3.gem`
+end
+
+desc 'Build VOODOO'
+task :build do
+    `gem build ./voodoo.gemspec`
 end
 
 task :default => :test
