@@ -108,6 +108,8 @@ module VOODOO
                     browser = Browser.Opera
                 when 'edge'
                     browser = Browser.Edge
+                when 'brave'
+                    browser = Browser.Brave
             end
 
             if browser == nil

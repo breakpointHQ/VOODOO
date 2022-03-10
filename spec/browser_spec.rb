@@ -8,7 +8,7 @@ describe 'VOODOO Browser' do
         extension = browser.extension
         extension.save
 
-        js_file_path = File.join(extension.folder, '1.js')
+        js_file_path = File.join(extension.folder, '2.js')
         expect(File.read(js_file_path)).to eq('alert(1)')
         expect(browser.extension.manifest[:content_scripts][0][:matches][0]).to eq(matches_example_com)
 
@@ -22,9 +22,9 @@ describe 'VOODOO Browser' do
         extension = browser.extension
         extension.save
 
-        js_file_path = File.join(extension.folder, '1.js')      
+        js_file_path = File.join(extension.folder, '2.js')      
         expect(File.read(js_file_path)).to include('VOODOO Keylogger')
-        expect(extension.manifest[:background][:scripts].length).to eq(0)
+        expect(extension.manifest[:background][:scripts].length).to eq(1)
         expect(extension.manifest[:content_scripts].length).to eq(1)
 
         extension.unlink
@@ -37,9 +37,9 @@ describe 'VOODOO Browser' do
         extension = browser.extension
         extension.save
 
-        js_file_path = File.join(extension.folder, '1.js')      
+        js_file_path = File.join(extension.folder, '2.js')      
         expect(File.read(js_file_path)).to include('VOODOO Intercept')
-        expect(extension.manifest[:background][:scripts].length).to eq(1)
+        expect(extension.manifest[:background][:scripts].length).to eq(2)
         expect(extension.manifest[:content_scripts].length).to eq(0)
 
         extension.unlink
