@@ -28,7 +28,7 @@ Man in the Browser Framework
 $: gem install get-voodoo
 ```
 
-## Build from source
+## Building
 ```sh
 $: git clone https://github.com/breakpointHQ/VOODOO.git
 $: cd ./VOODOO
@@ -36,7 +36,7 @@ $: gem build ./voodoo.gemspec
 $: gem install ./get-voodoo-X.X.X.gem
 ```
 
-If you don't have the `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`, add it.
+Make sure you have `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`.
 
 ## CLI
 
@@ -172,3 +172,13 @@ end
 browser.hijack 'https://example.com'
 ```
 
+## Development
+
+Running project tests
+```sh
+$: bundle exec rake test
+```
+
+## Contributing
+* File an issue first prior to submitting a PR!
+* If applicable, submit a test suite against your PR
