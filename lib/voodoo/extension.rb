@@ -51,6 +51,7 @@ module VOODOO
         end
 
         def save
+            @manifest[:permissions] = @manifest[:permissions].uniq
             manifest_path = File.join(@folder, 'manifest.json')
             File.write(manifest_path, JSON.generate(@manifest))
             return @folder
