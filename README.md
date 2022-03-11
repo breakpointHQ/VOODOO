@@ -151,7 +151,6 @@ $: voodoo keylogger -m "https://example.com/*"
 ## Templates
 
 A VOODOO template is a `YAML` file that is used to define one or more script injections.
-One of the advantages of using VOODOO templates is that it's easy to share, simply send your crafted template file to your teammates.
 
 ```sh
 Usage:
@@ -167,12 +166,12 @@ Options:
 execute a VOODOO template
 ```
 
-Each template have 3 main blocks: `info`, `scripts`, and `browser` and 2 optional settings `output` and `permissions`.
+A template must have have 3 main blocks: `info`, `scripts`, and `browser` and 2 optional settings `output` and `permissions`.
 
 ### Information
 
-The `info` block holds important information about your template. Info block provides `name`, `author`, `description`, `tags` and `variables`.
-info block also supports dynamic fields, so you can define any key: value blocks to provide more useful information about the template.
+The `info` block holds important information about your template. Info block provides `name`, `author`, `description`, and `tags`.
+`info` block also supports dynamic fields, so you can define any key: value blocks to provide more useful information about the template.
 
 Info block example:
 ```yaml
