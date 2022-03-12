@@ -1,7 +1,7 @@
 info:
   name: Cookie Monster
   description: Extract the cookies of a given domain
-  variables:
+  params:
     - domain
 
 format: payload
