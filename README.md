@@ -16,7 +16,7 @@ Man in the Browser Framework
 * 📜 Content Scripts - inject arbitrary JavaScript to any page
 * 🔍 Interceptor - capture browser traffic (url, headers, body, etc)
 * 🔑 Keylogger - records user keystrokes on any site
-* 📋 Template - shareable `YAML` file to define one or more script injections
+* 📋 VOODOO Templates - run advance man in the browser attacks from template files
 
 ## Requirements
 * ruby >= 2.0.0
