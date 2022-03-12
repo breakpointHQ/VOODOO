@@ -6,7 +6,7 @@ require 'voodoo/browser'
 
 module VOODOO
 
-    VERSION = 'v0.0.1'
+    VERSION = 'v0.0.6'
 
     class CLI < Thor
 
