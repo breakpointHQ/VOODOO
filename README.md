@@ -12,6 +12,9 @@ Man in the Browser Framework
 | --------- | --------- | --------- | --------- | --------- |
 | macOS only | macOS only | macOS only | macOS only | macOS only
 
+## Legal Disclaimer
+Usage of this code for attacking targets without prior mutual consent is illegal. It's the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program. Only use for educational purposes.
+
 ## Features
 * 📜 Content Scripts - inject arbitrary JavaScript to any page
 * 🔍 Interceptor - capture browser traffic (url, headers, body, etc)
