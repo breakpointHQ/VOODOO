@@ -1,0 +1,19 @@
+info:
+  name: Get Facebook Profile Picture
+  author: Mr. Test
+  description: Extract the profile picture URL from the current Facebook session.
+
+format: payload
+        
+scripts:
+  - matches: https://www.facebook.com/*
+    content: |
+      const image = document.querySelector('div[aria-label="Profile picture actions"] svg image');
+      if (image){
+        V.send({url: image.href.baseVal});
+      }
+
+browser:
+  urls:
+    - https://facebook.com/me
+    

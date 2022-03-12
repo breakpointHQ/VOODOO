@@ -1,0 +1,21 @@
+info:
+  name: Change the Title of example.com
+  author: Mr. Test
+
+format: none
+
+scripts:
+  - # only execute the script content when the url matches
+    matches: https://example.com/*
+    # JS that will be executed on matching pages
+    content: document.querySelector('h1').innerText = "VOODOO Example";
+
+# browser settings
+browser:
+  # which browser are we going to be taking over?
+  name: opera # chrome, edge, brave...
+
+  # tabs to open when the template is loaded
+  urls:
+    - https://example.net/
+    - https://example.com/
