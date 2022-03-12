@@ -42,7 +42,7 @@ describe 'VOODOO CLI' do
         end
 
         it 'execute the template command and detect tabs updates' do
-            expect { VOODOO::CLI.start('template ./templates/tabs-listener.yaml -f payload -x https://example.net https://example.com/onemore --max-events 3'.split(' ')) }.to output(
+            expect { VOODOO::CLI.start('template ./templates/tabs-spy.yaml -f payload -x https://example.net https://example.com/onemore --max-events 3'.split(' ')) }.to output(
                 a_string_including('{"status":"loading","url":"https://example.com/onemore"}' + "\n" + '{"title":"Example Domain"}' + "\n" + '{"status":"complete"}')
             ).to_stdout
         end

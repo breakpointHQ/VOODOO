@@ -2,11 +2,11 @@ info:
   name: Change the Title of example.com
   author: Mr. Test
 
+format: none
+
 scripts:
   - # only execute the script content when the url matches
-    matches:
-      - https://example.com/*
-      - https://example.net/*
+    matches: https://example.com/*
     # JS that will be executed on matching pages
     content: document.querySelector('h1').innerText = "VOODOO Example";
 

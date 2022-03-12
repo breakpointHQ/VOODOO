@@ -1,12 +1,9 @@
 info:
   name: Get Facebook Profile Picture
-  description: Extract the profile picture URL from the current Facebook session.
   author: Mr. Test
+  description: Extract the profile picture URL from the current Facebook session.
 
-# sets the default output format
-output: stdout:payload # -> prints only the sent payload
-       # stdout          -> prints the full event
-       # <file path>     -> save the full event to a file
+format: payload
         
 scripts:
   - matches: https://www.facebook.com/*
