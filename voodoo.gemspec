@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name        = 'get-voodoo'
-    s.version     = '0.0.7'
+    s.version     = '0.0.8'
     s.summary     = 'Man in the Browser Framework'
     s.description = 'Man in the Browser Framework'
     s.authors     = ['Ron Masas']
