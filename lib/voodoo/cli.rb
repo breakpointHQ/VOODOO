@@ -6,7 +6,7 @@ require 'voodoo/browser'
 
 module VOODOO
 
-    VERSION = 'v0.0.6'
+    VERSION = 'v0.0.7'
 
     class CLI < Thor
 
@@ -16,7 +16,7 @@ module VOODOO
         end
         
         option :url_include, :type => :string, :aliases => :u, :default => nil
-        option :body_include, :type => :string, :aliases => :b, :default => nil
+        option :body_include, :type => :string, :aliases => :i, :default => nil
         option :header_exists, :type => :string, :aliases => :h, :default => nil
         option :format, :type => :string, :aliases => :f, :default => 'pretty', :desc => 'pretty, json, payload'
         option :output, :type => :string, :aliases => :o, :desc => 'File path', :default => nil

@@ -99,7 +99,7 @@ Usage:
 
 Options:
   u, [--url-include=URL_INCLUDE]      
-  b, [--body-include=BODY_INCLUDE]    
+  i, [--body-include=BODY_INCLUDE]    
   h, [--header-exists=HEADER_EXISTS]  
   f, [--format=FORMAT]                # pretty, json, payload
                                       # Default: pretty
