@@ -15,7 +15,7 @@ VOODOO is highly extendable & shareable, it can execute `YAML` templates that de
 | macOS only | macOS only | macOS only | macOS only | macOS only
 
 ## Demo
-[![VOODOO](https://img.youtube.com/vi/4wTpdh06H_o/0.jpg?s)](https://www.youtube.com/watch?v=4wTpdh06H_o)
+[![VOODOO](https://img.youtube.com/vi/4wTpdh06H_o/1.jpg?s)](https://www.youtube.com/watch?v=4wTpdh06H_o)
 
 ## Why?
 In macOS traffic interception and keyloggers usually require TCC permissions, VOODOO bypass all of this by exploiting chromium based browsers extensions.
@@ -30,13 +30,7 @@ Usage of this code for attacking targets without prior mutual consent is illegal
 * 🔑 Keylogger - records user keystrokes on any site
 * 📋 VOODOO Templates - run advance man in the browser attacks from template files
 
-## Requirements
-* ruby >= 2.0.0
-* rubygems >= 1.8
-* thor ~> 1.2.1
-* bundler >= 1.17
-
-## Installation
+## Quick start
 ```sh
 $: gem install get-voodoo
 ```
