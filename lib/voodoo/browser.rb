@@ -6,10 +6,9 @@ module VOODOO
     class Browser
         attr_reader :extension
         attr_accessor :bundle
-        attr_accessor :profile
         attr_accessor :process_name
 
-        def initialize(bundle: nil, process_name: nil, profile: nil, extension: Extension.new)
+        def initialize(bundle: nil, process_name: nil, extension: Extension.new)
             @bundle = bundle
             @extension = extension
             @process_name = process_name
@@ -50,17 +49,16 @@ module VOODOO
             @extension.manifest[:permissions] += permissions
         end
 
-        def hijack(urls = [])
+        def hijack(urls = [], flags: '')
             # kill the browser process twise, to bypass close warning
             `pkill -a -i "#{@process_name}"`
             `pkill -a -i "#{@process_name}"`
-            sleep 0.1
+            sleep 0.2
 
             urls = [urls] unless urls.kind_of? Array
             urls = urls.uniq
 
-            profile_dir = "--profile-directory=\"#{@profile}\"" if @profile != nil
-            `open -b "#{@bundle}" --args #{profile_dir} --load-extension="#{@extension.save}" #{urls.shift}`
+            `open -b "#{@bundle}" --args #{flags} --load-extension="#{@extension.save}" #{urls.shift}`
 
             if urls.length > 0
                 sleep 0.5
