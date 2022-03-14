@@ -1,3 +1,5 @@
+require 'base64'
+
 module VOODOO
 
     class Output
@@ -48,6 +50,8 @@ module VOODOO
                     write JSON.generate(event)
                 when 'payload'
                     write JSON.generate(event[:payload])
+                when 'payload:base64decode'
+                    write Base64.decode64(event[:payload])
                 else
                     write JSON.generate(event)
             end

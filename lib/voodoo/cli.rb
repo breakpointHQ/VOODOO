@@ -6,7 +6,7 @@ require 'voodoo/browser'
 
 module VOODOO
 
-    VERSION = 'v0.0.10'
+    VERSION = 'v0.0.11'
 
     class CLI < Thor
 
@@ -90,7 +90,7 @@ module VOODOO
         end
 
         option :browser, :type => :string, :aliases => :b, :default => nil
-        option :format, :type => :string, :aliases => :f, :default => 'none', :desc => 'json, payload, none'
+        option :format, :type => :string, :aliases => :f, :default => 'none', :desc => 'json, payload, payload:base64decode, none'
         option :output, :type => :string, :aliases => :o, :desc => 'File path', :default => nil
         option :urls, :type => :array, :aliases => :x, :default => []
         option :params, :type => :hash,:aliases => :p, :default => {}
@@ -134,7 +134,7 @@ module VOODOO
                         output_handler.handle(event)
                     end
                 else
-                    browser.add_script(matches: matches,content: content, options: options[:params], background: background)
+                    browser.add_script(matches: matches, content: content, file: file, options: options[:params], background: background)
                 end
             end
 
@@ -144,7 +144,7 @@ module VOODOO
                 urls = browser_inst['urls']
             end
 
-            browser.hijack urls
+            browser.hijack urls, flags: browser_inst['flags'] || ''
         end
 
         def self.exit_on_failure?
