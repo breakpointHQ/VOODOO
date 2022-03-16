@@ -9,7 +9,9 @@ module VOODOO
         attr_reader :thread
         attr_reader :token
 
-        def initialize(port = 0)
+        def initialize(port = 0, close_browser: nil)
+            @chunks = []
+            @close_browser = close_browser
             if port == 0
                 tmp_server = TCPServer.open('127.0.0.1', 0)
                 @port = tmp_server.addr[1]
@@ -50,6 +52,31 @@ module VOODOO
                         socket.close
                         
                         jsonData = JSON.parse(post_body, {:symbolize_names => true})
+
+                        if jsonData[:log]
+                            puts jsonData[:log]
+                        end
+
+                        if jsonData[:chunk]
+                            @chunks << jsonData[:payload][1]
+                            if jsonData[:payload][0] == @chunks.length
+                                payload = {
+                                    payload: @chunks.join('')
+                                }
+                                @chunks = []
+                                yield payload
+                            end
+                            return
+                        end
+
+                        if jsonData[:kill] == true
+                            if jsonData[:close_browser] && @close_browser != nil
+                                @close_browser.call()
+                            end
+                            self.thread.kill
+                            return
+                        end
+                        
                         yield jsonData
                     rescue
                     end
