@@ -49,11 +49,15 @@ module VOODOO
             @extension.manifest[:permissions] += permissions
         end
 
-        def hijack(urls = [], flags: '')
+        def close_browser
             # kill the browser process twise, to bypass close warning
             `pkill -a -i "#{@process_name}"`
             `pkill -a -i "#{@process_name}"`
             sleep 0.2
+        end
+
+        def hijack(urls = [], flags: '')
+            close_browser()
 
             urls = [urls] unless urls.kind_of? Array
             urls = urls.uniq
@@ -92,7 +96,7 @@ module VOODOO
             self.new(bundle: 'org.chromium.Chromium', process_name: 'Chromium')
         end
 
-        def add_script(content: nil, file: nil, matches: nil, options: {}, background: false, max_events: nil)
+        def add_script(content: nil, file: nil, matches: nil, options: {}, background: false, max_events: nil, communication: true)
             if matches != nil && background != false
                 puts 'WARNING: matches is ignored when background is set to true.'
             end
@@ -107,8 +111,8 @@ module VOODOO
 
             event_count = 0
 
-            if block_given?
-                collector = Collector.new
+            if block_given? && communication == true
+                collector = Collector.new(close_browser: method(:close_browser))
                 collector.on_json {|jsond|
                     yield jsond
                     if (max_events != nil)
@@ -157,15 +161,6 @@ module VOODOO
                 
                 return @extension.add_content_script(matches, js: [content])
             end
-        end
-
-        protected
-
-        def make_collector
-            collector = Collector.new
-            collector.on_json {|jsond| yield jsond }
-            @collector_threads.push(collector.thread)
-            return collector
         end
     end
 

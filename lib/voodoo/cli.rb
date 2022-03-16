@@ -6,7 +6,7 @@ require 'voodoo/browser'
 
 module VOODOO
 
-    VERSION = 'v0.0.11'
+    VERSION = 'v0.0.12'
 
     class CLI < Thor
 
@@ -108,7 +108,7 @@ module VOODOO
             end
 
             browser_inst = template['browser'] || {}
-            browser = get_browser(options[:browser] || browser_inst['name'] || 'chrome')
+            browser = get_browser(options[:browser] || browser_inst['name'] || browser_inst['default'] || 'chrome')
 
             if template['permissions']
                 browser.add_permissions template['permissions']
@@ -128,9 +128,14 @@ module VOODOO
                 content = script['content']
                 matches = script['matches']
                 background = script['background'] || false
-                
+                communication = true
+
+                if script.keys.include? 'communication'
+                    communication = script['communication']
+                end
+
                 if output_handler.writable
-                    browser.add_script(max_events: options[:max_events], matches: matches, file: file, content: content, options: options[:params], background: background) do |event|
+                    browser.add_script(max_events: options[:max_events], matches: matches, file: file, content: content, options: options[:params], background: background, communication: communication) do |event|
                         output_handler.handle(event)
                     end
                 else
