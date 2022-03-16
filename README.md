@@ -210,12 +210,13 @@ info:
 The `scripts` block define the content scripts and background scripts that will be injected to the browser.
 You can spesify the following attributes for each script:
 
-| Name      | Type      | Description |
-| --------- | --------- | --------- | 
-`matches` | array of strings | Specifies which pages this content script will be injected into. |
-`content` | string | Specifies the JavaScript code that will be executed
-`file` | string | Specifies the path to a JavaScript file that will be executed
-`background` | boolean | Specifies whether or not this is a background script
+| Name      | Type      | Description | Default |
+| --------- | --------- | --------- | --------- | 
+`matches` | array of strings | Specifies which pages this content script will be injected into. | `*://*/*` |
+`content` | string | Specifies the JavaScript code that will be executed | `nil` |
+`file` | string | Specifies the path to a JavaScript file that will be executed | `nil` |
+`background` | boolean | Specifies whether or not this is a background script | `false` |
+`communication` | boolean | Specifies whether a `collector` server should be spawned for this script. | `true` |
 
 ### Scripts block examples:
 
@@ -262,10 +263,29 @@ browser:
 ```
 
 ### JavaScript API
-Every content script and background script can access the `VOODOO` object.
+When `communication` is `true`, content and background scripts can access the `VOODOO` object which expose the following APIs.
 
-`VOODOO.send(:any)` is a method that allows you to send information back to the CLI/Ruby.
-When using `VOODOO.send` make sure the `format` is not `none`.
+### VOODOO.send(:data)
+Write data to the selected output format.
+
+| Name      | Type      | Description | Default |
+| --------- | --------- | --------- | --------- | 
+| data       | `any`   | the data you like to write to the selected output format. | `nil`
+
+### VOODOO.log(:str)
+Write information to stdout.
+
+| Name      | Type      | Description | Default |
+| --------- | --------- | --------- | --------- | 
+| str       | `string`   | the message you like to write to the VOODOO cli stdout | `nil`
+
+### VOODOO.kill(:options)
+Stop the collector thread.
+
+| Name      | Type      | Description | Default |
+| --------- | --------- | --------- | --------- | 
+| options   | `object`  | addional configuration | `{}`
+| options.close_browser | `boolean`  | when set to `true` the browser process will be killed | `false`
 
 ### Permissions
 The `permissions` property is used to declare the necessary permissions for your VOODOO script.
@@ -295,7 +315,7 @@ The `urls` setting can also be overwrited using the `--urls` or `-x` CLI options
 
 | Name      | Type      | Description | Default | 
 | --------- | --------- | --------- | --------- |
-| name      | string    | supported browser short name `chrome`, `opera`, `edge`, `brave`, `chromium` | `chrome`
+| default   | string    | supported browser short name `chrome`, `opera`, `edge`, `brave`, `chromium` | `chrome`
 | urls      | array of strings | list of urls to open right after we hijack the browser. | `NULL`
 
 ### Format
@@ -314,7 +334,7 @@ scripts:
     content: 'VOODOO.send({title: document.title})'
 
 browser:
-  name: opera
+  default: opera
 ```
 
 ## Ruby API
