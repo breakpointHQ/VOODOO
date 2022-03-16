@@ -256,7 +256,7 @@ scripts:
     content: document.querySelector('h1').innerText = "VOODOO Example";
 
 browser:
-  name: opera
+  default: opera
   urls:
     - https://example.net/
     - https://example.com/
