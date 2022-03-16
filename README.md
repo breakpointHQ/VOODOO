@@ -32,8 +32,15 @@ Usage of this code for attacking targets without prior mutual consent is illegal
 
 ## Quick start
 ```sh
-$: gem install get-voodoo
+$: sudo gem install get-voodoo
 ```
+OR
+
+```sh
+$: gem install get-voodoo --user-install
+```
+
+When installation without `sudo` make sure that `/Users/[user]/.gem/ruby/[version]/bin` is in your `PATH`.
 
 ## Building
 ```sh
@@ -42,8 +49,6 @@ $: cd ./VOODOO
 $: gem build ./voodoo.gemspec
 $: gem install ./get-voodoo-X.X.X.gem
 ```
-
-Make sure you have `/Users/[user]/.gem/ruby/[version]/bin` in your `PATH`.
 
 ## CLI
 
