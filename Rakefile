@@ -16,7 +16,7 @@ task :dev do
   `gem uninstall get-voodoo`
   puts `bundle install`
   puts `gem build ./voodoo.gemspec`
-  puts `gem install ./get-voodoo-0.0.3.gem --user-install && rm ./get-voodoo-0.0.3.gem`
+  puts `gem install ./get-voodoo-0.1.0.gem --user-install`
 end
 
 desc 'Build VOODOO'

@@ -16,7 +16,6 @@ module VOODOO
 
             @extension.manifest[:permissions] = ['tabs', 'storage']
             matches = '*://*/*'
-            #@extension.add_content_script(matches, js: [File.join(__dir__, 'js/collector.js')])
         end
 
         def keylogger(matches: '*://*/*', max_events: nil)
