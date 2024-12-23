@@ -17,16 +17,17 @@ module VOODOO
                 author: '~',
                 description: '',
                 version: '0.0.1',
-                manifest_version: 2,
-                background: {
-                    scripts: []
-                },
+                manifest_version: 3,
                 permissions: [],
-                content_scripts: []
+                host_permissions: [],
+                content_scripts: [],
+                background: {
+                    service_worker: nil
+                }
             }
         end
 
-        def add_background_script(content: nil, file: nil)
+        def add_service_worker(content: nil, file: nil)
             if content == nil && file != nil
                 content = File.read file
             end
@@ -34,7 +35,7 @@ module VOODOO
                 raise StandardError.new(':content or :file argument are required')
             end
             path = add_file(content, with_extension: '.js')
-            @manifest[:background][:scripts] << path
+            @manifest[:background][:service_worker] = path
         end
 
         def add_content_script(matches, js: [], css: [])
@@ -52,6 +53,10 @@ module VOODOO
 
         def save
             @manifest[:permissions] = @manifest[:permissions].uniq
+            service_worker = @manifest[:background][:service_worker]
+            if service_worker == nil || service_worker == ''
+                @manifest[:background].delete(:service_worker)
+            end
             manifest_path = File.join(@folder, 'manifest.json')
             File.write(manifest_path, JSON.generate(@manifest))
             return @folder

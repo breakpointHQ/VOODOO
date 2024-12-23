@@ -24,25 +24,8 @@ describe 'VOODOO Browser' do
         extension = browser.extension
         extension.save
 
-        js_file_path = File.join(extension.folder, '2.js')      
+        js_file_path = File.join(extension.folder, '1.js')
         expect(File.read(js_file_path)).to include('VOODOO Keylogger')
-        expect(extension.manifest[:background][:scripts].length).to eq(1)
-        expect(extension.manifest[:content_scripts].length).to eq(1)
-
-        extension.unlink
-    end
-
-    it 'should save the intercept.js script into the extension' do
-        browser = VOODOO::Browser.Chrome
-        browser.intercept
-        
-        extension = browser.extension
-        extension.save
-
-        js_file_path = File.join(extension.folder, '2.js')      
-        expect(File.read(js_file_path)).to include('VOODOO Intercept')
-        expect(extension.manifest[:background][:scripts].length).to eq(2)
-        expect(extension.manifest[:content_scripts].length).to eq(0)
 
         extension.unlink
     end

