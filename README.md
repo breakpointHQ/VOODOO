@@ -1,6 +1,6 @@
 # VOODOO
 VOODOO is a Man in the browser attack framework for macOS.
-It comes with built-in keylogging, traffic monitoring, and scripting capabilities.
+It comes with built-in keylogging, and scripting capabilities.
 VOODOO is highly extendable & shareable, it can execute `YAML` templates that define complex attacks.
 
 <p align="center">
@@ -26,7 +26,6 @@ Usage of this code for attacking targets without prior mutual consent is illegal
 
 ## Features
 * 📜 Content Scripts - inject arbitrary JavaScript to any page
-* 🔍 Interceptor - capture browser traffic (url, headers, body, etc)
 * 🔑 Keylogger - records user keystrokes on any site
 * 📋 VOODOO Templates - run advance man in the browser attacks from template files
 
@@ -103,47 +102,7 @@ $: voodoo script /tmp/myjs.js -b chrome -x "https://example.com"
 
 ## Intercept browser traffic
 
-```sh
-$: voodoo help intercept
-Usage:
-  voodoo intercept
-
-Options:
-  u, [--url-include=URL_INCLUDE]      
-  i, [--body-include=BODY_INCLUDE]    
-  h, [--header-exists=HEADER_EXISTS]  
-  f, [--format=FORMAT]                # pretty, json, payload
-                                      # Default: pretty
-  o, [--output=OUTPUT]                # File path
-  x, [--urls=one two three]           
-  m, [--matches=one two three]        
-                                      # Default: ["<all_urls>"]
-  b, [--browser=BROWSER]              
-                                      # Default: chrome
-      [--max-events=N]                
-
-Intercept browser requests
-```
-
-Intercept all requests
-```sh
-$: voodoo intercept -o /tmp/requests_log.txt
-```
-
-Intercept all requests from Opera browser only when the url include `/login`.
-```sh
-$: voodoo intercept -o /tmp/requests_log.txt --url-include "/login"
-```
-
-Intercept all requests when the post body include `@`.
-```sh
-$: voodoo intercept -o /tmp/requests_log.txt --body-include "@"
-```
-
-Intercept all requests when the url matches `https://example.com/*` or `https://example.net/*`
-```sh
-$: voodoo intercept -m "https://example.com/*" "https://example.net/*"
-```
+This is no longer supported due to migration to the v3 chrome extension manifest.
 
 ## Keylogger
 ```sh

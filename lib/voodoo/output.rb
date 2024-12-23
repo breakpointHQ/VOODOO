@@ -35,14 +35,6 @@ module VOODOO
                     case @command
                         when 'keylogger'
                             write event[:payload], with_print: true
-                        when 'intercept'
-                            req = event[:payload]
-                            write "#{req[:method]} #{req[:url]}"
-                            req[:body] = req[:body][0...97] + "..." if req[:body] && req[:body].length > 100
-                            
-                            if req[:body]
-                                write "BODY: #{event[:payload][:body]}"
-                            end 
                         else
                             write JSON.generate(event[:payload])
                     end

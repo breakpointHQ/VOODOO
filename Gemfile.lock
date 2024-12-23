@@ -25,7 +25,7 @@ DEPENDENCIES
   rake
   rspec (~> 3.0)
   rspec-core
-  thor
+  thor (= 1.2.1)
 
 BUNDLED WITH
    1.17.2
