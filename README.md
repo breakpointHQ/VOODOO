@@ -18,7 +18,7 @@ VOODOO is highly extendable & shareable, it can execute `YAML` templates that de
 [![VOODOO](https://img.youtube.com/vi/4wTpdh06H_o/1.jpg?s)](https://www.youtube.com/watch?v=4wTpdh06H_o)
 
 ## Why?
-In macOS traffic interception and keyloggers usually require TCC permissions, VOODOO bypass all of this by exploiting chromium based browsers extensions.
+In macOS keylogging, webcam and microphone access usually require TCC permissions, VOODOO bypass all of this using chromium based browsers extensions.
 **VOODOO does not require root privileges or any TCC permissions to work.**
 
 ## Legal Disclaimer
@@ -55,7 +55,6 @@ $: gem install ./get-voodoo-X.X.X.gem
 $: voodoo
 Commands:
   voodoo help [COMMAND]    # Describe available commands or one specific command
-  voodoo intercept         # Intercept browser requests
   voodoo keylogger         # Records user keystrokes
   voodoo script <js/path>  # Add a content script
   voodoo template <path>   # Execute a VOODOO template
@@ -320,12 +319,6 @@ browser = VOODOO::Browser.Chrome
 # Execute JS on example.com
 browser.add_script(content: 'alert("VOODOO Example!");',
                    matches: 'https://example.com/*')
-
-# Intercept all browser requests
-browser.intercept do |event|
-    req = event[:payload]
-    puts "#{req[:method]} #{req[:url]}"
-end
 
 # Inject a keylogger to every page
 browser.keylogger do |event|
